@@ -1,22 +1,46 @@
 <template>
   <v-container class="mb-6">
-    <v-row align="middle" no-gutters style="height: auto;">
-      <v-col id="player">
-        <h1>Your hero</h1>
-        <HealthBar :value="playerHealth"></HealthBar>
+    <p>{{ gameStatus }}</p>
+    <v-row align="center" no-gutters style="height: auto;">
+      <!--- Start screen -->
+      <v-col
+        v-if="gameStatus === gameStatuses.NOT_STARTED"
+        style="textAlign: center; margin: 3em;"
+      >
+        <Button @click="startGame">Start game</Button>
       </v-col>
-      <v-col id="battlefield">
-        <Button>Start game</Button>
-      </v-col>
-      <v-col id="monster">
-        <h1>Monster</h1>
-        <HealthBar :value="monsterHealth"></HealthBar>
+
+      <!-- Game screen -->
+      <template v-else-if="gameStatus === gameStatuses.ONGOING">
+        <v-col id="player">
+          <HealthBar :value="playerHealth"></HealthBar>
+          <div>
+            <Button @click="attack">Attack</Button>
+            <br />
+            <Button @click="specialAttack">Special Attack</Button>
+            <br />
+            <Button :disabled="playerHealth === 100" @click="heal">Heal</Button>
+            <br />
+            <Button @click="giveUp">Give up</Button>
+          </div>
+        </v-col>
+        <v-col id="battlefield"></v-col>
+        <v-col id="monster">
+          <HealthBar :value="monsterHealth"></HealthBar>
+          <img width="500px" :src="monsterSrc" alt="cute red monster" />
+        </v-col>
+      </template>
+
+      <!-- Game ended screen -->
+      <v-col v-else>
+        Game ended
+        <Button @click="startGame">New game</Button>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
-  <!--<v-container>
+<!--<v-container>
     <v-layout text-center wrap>
       <v-flex xs12>
         <HealthBar :value="playerHealth"></HealthBar>
@@ -49,27 +73,123 @@
     </v-layout>
   </v-container>-->
 
-
 <script>
-import HealthBar from "@/components/HealthBar";
-import Button from "@/components/Button";
+import HealthBar from "@/components/HealthBar"
+import Button from "@/components/Button"
+
+const _GAME_STATUSES = {
+  NOT_STARTED: "Not started",
+  ONGOING: "Game ongoing",
+  WIN: "You win!",
+  LOSE: "You lost!"
+}
+
+const _MONSTER_SETTINGS = {
+  MAX_HEALTH: 100,
+  ATTACK_MIN: 3,
+  ATTACK_MAX: 7,
+  SPECIAL_ATTACK_MIN: 1,
+  SPECIAL_ATTACK_MAX: 10,
+  IMG_DEFAULT: require("../assets/img/monster.png"),
+  IMG_ATTACK: require("../assets/img/monster-attack.png")
+}
+
+const _PLAYER_SETTINGS = {
+  MAX_HEALTH: 100,
+  ATTACK_MIN: 2,
+  ATTACK_MAX: 6,
+  SPECIAL_ATTACK_MIN: 4,
+  SPECIAL_ATTACK_MAX: 9,
+  HEAL_POWER: 4
+}
 
 export default {
-  name: "MonsterSlayer",
+  name: "Game",
 
   data: () => ({
+    // to access status constants in template, define them inside component
+    gameStatuses: _GAME_STATUSES,
     playerHealth: 100,
     monsterHealth: 50,
-    gameIsRunning: false
+    gameStatus: _GAME_STATUSES.NOT_STARTED,
+    monsterSrc: _MONSTER_SETTINGS.IMG_DEFAULT
   }),
+
+  methods: {
+    /** @description start a new game and reset game values */
+    startGame: function() {
+      this.gameStatus = _GAME_STATUSES.ONGOING
+      this.playerHealth = _PLAYER_SETTINGS.MAX_HEALTH
+      this.monsterHealth = _MONSTER_SETTINGS.MAX_HEALTH
+    },
+
+    /** @description attacks enemy and makess */
+    attack: function() {
+      this.monsterSrc = _MONSTER_SETTINGS.IMG_ATTACK
+      this.monsterHealth -= this.calculateDamage(
+        _PLAYER_SETTINGS.ATTACK_MAX,
+        _PLAYER_SETTINGS.ATTACK_MAX
+      )
+
+      this.playerHealth -= this.calculateDamage(
+        _MONSTER_SETTINGS.ATTACK_MIN,
+        _MONSTER_SETTINGS.ATTACK_MAX
+      )
+      this.checkGameStatus()
+      // return player images to default after attack
+      setTimeout(function() {
+        console.log("setting image back to default")
+        this.monsterSrc = _MONSTER_SETTINGS.IMG_DEFAULT
+      }, 2000)
+    },
+
+    /** @description more powerful attack but can fail also  */
+    specialAttack: function() {
+      this.monsterSrc = _MONSTER_SETTINGS.IMG_ATTACK
+      this.monsterHealth -= this.calculateDamage(
+        _MONSTER_SETTINGS.SPECIAL_ATTACK_MIN,
+        _MONSTER_SETTINGS.SPECIAL_ATTACK_MAX
+      )
+      this.playerHealth -= this.calculateDamage(
+        _PLAYER_SETTINGS.SPECIAL_ATTACK_MIN,
+        _PLAYER_SETTINGS.SPECIAL_ATTACK_MAX
+      )
+      this.checkGameStatus()
+    },
+
+    /** @description increses player health */
+    heal: function() {
+      this.playerHealth += _PLAYER_SETTINGS.HEAL_POWER
+    },
+
+    /** @desctiption Cancel game and return to start screen */
+    giveUp: function() {
+      this.gameStatus = _GAME_STATUSES.LOSE
+    },
+
+    /** @description returns random damage value that will be substracted from player health
+     * @param {number} min min number of damage caused to a player
+     * @param {number} max max number of damage caused to a player
+     */
+    calculateDamage: function(min, max) {
+      return Math.max(Math.floor(Math.random() * min), max)
+    },
+
+    /** @description Check if player or monster won, otherwise continue game */
+    checkGameStatus: function() {
+      if (this.monsterHealth <= 0 || this.playerHealth <= 0) {
+        this.gameStatus =
+          this.monsterHealth <= 0 ? _GAME_STATUSES.WIN : _GAME_STATUSES.LOSE
+      }
+    }
+  },
 
   components: {
     HealthBar,
     Button
   }
-};
+}
 </script>
-
 
 <style lang="scss" scoped>
 #battlefield {
