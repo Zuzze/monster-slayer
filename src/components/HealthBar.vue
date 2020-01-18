@@ -2,7 +2,7 @@
   <div class="health-bar">
     <div
       class="health-bar__value"
-      :class="{ full: value === 100 }"
+      :class="{ full: value === 100, heal: healing }"
       :style="{ width: healthBarWidth }"
     >
       {{ value }}
@@ -14,7 +14,7 @@
 /** @description healthbar showing the health of player or monster */
 export default {
   name: "Healthbar",
-  props: ["value"],
+  props: ["value", "healing"],
   computed: {
     healthBarWidth: function() {
       return this.value + "%"
@@ -53,6 +53,11 @@ export default {
   transition: 0.8s;
   &.full {
     border-radius: $BAR_BORDER_RADIUS;
+  }
+  &.heal {
+    -webkit-box-shadow: 0px 0px 13px 2px rgba(156, 230, 87, 1);
+    -moz-box-shadow: 0px 0px 13px 2px rgba(156, 230, 87, 1);
+    box-shadow: 0px 0px 13px 2px rgba(156, 230, 87, 1);
   }
 }
 </style>

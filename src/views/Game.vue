@@ -11,29 +11,70 @@
       </v-col>
 
       <!-- Game screen -->
-      <template v-else-if="gameStatus === gameStatuses.ONGOING">
+      <template
+        v-else-if="
+          [
+            gameStatuses.ONGOING,
+            gameStatuses.ATTACK,
+            gameStatuses.HEAL
+          ].includes(gameStatus)
+        "
+      >
         <v-col id="player">
-          <HealthBar :value="playerHealth"></HealthBar>
+          <HealthBar
+            :value="playerHealth"
+            :healing="gameStatus === gameStatuses.HEAL"
+          ></HealthBar>
           <div>
-            <Button @click="attack">Attack</Button>
+            <Button :disabled="monsterHealth <= 0" @click="attack"
+              >Attack</Button
+            >
             <br />
-            <Button @click="specialAttack">Special Attack</Button>
+            <Button :disabled="monsterHealth <= 0" @click="specialAttack"
+              >Special Attack</Button
+            >
             <br />
-            <Button :disabled="playerHealth === 100" @click="heal">Heal</Button>
+            <Button
+              :disabled="playerHealth === 100 || monsterHealth <= 0"
+              @click="heal"
+              >Heal</Button
+            >
             <br />
-            <Button @click="giveUp">Give up</Button>
+            <Button :disabled="monsterHealth <= 0" @click="giveUp"
+              >Give up</Button
+            >
           </div>
         </v-col>
         <v-col id="battlefield"></v-col>
-        <v-col id="monster">
+        <v-col>
           <HealthBar :value="monsterHealth"></HealthBar>
-          <img width="500px" :src="monsterSrc" alt="cute red monster" />
+          <img
+            width="500px"
+            id="monster"
+            :src="monsterSrc"
+            :class="gameStatus"
+            alt="cute red monster"
+          />
         </v-col>
       </template>
 
       <!-- Game ended screen -->
       <v-col v-else>
         Game ended
+        <div>
+          <img
+            v-if="gameStatus === gameStatuses.WIN"
+            :src="monsterSettings.IMG_DEFEATED"
+            width="50%"
+            alt="defeated monster with bandage"
+          />
+          <img
+            v-else
+            :src="monsterSettings.IMG_WIN"
+            width="50%"
+            alt="monster with sunglasses smiling"
+          />
+        </div>
         <Button @click="startGame">New game</Button>
       </v-col>
     </v-row>
@@ -78,28 +119,30 @@ import HealthBar from "@/components/HealthBar"
 import Button from "@/components/Button"
 
 const _GAME_STATUSES = {
-  NOT_STARTED: "Not started",
-  ONGOING: "Game ongoing",
-  WIN: "You win!",
-  LOSE: "You lost!"
+  NOT_STARTED: "not-started",
+  ONGOING: "ongoing",
+  ATTACK: "attack",
+  HEAL: "heal",
+  WIN: "win",
+  LOSE: "lose!"
 }
 
 const _MONSTER_SETTINGS = {
   MAX_HEALTH: 100,
-  ATTACK_MIN: 3,
-  ATTACK_MAX: 7,
-  SPECIAL_ATTACK_MIN: 1,
-  SPECIAL_ATTACK_MAX: 10,
+  ATTACK_MIN: 5,
+  ATTACK_MAX: 12,
   IMG_DEFAULT: require("../assets/img/monster.png"),
-  IMG_ATTACK: require("../assets/img/monster-attack.png")
+  IMG_ATTACK: require("../assets/img/monster-attack.png"),
+  IMG_DEFEATED: require("../assets/img/monster-defeated.png"),
+  IMG_WIN: require("../assets/img/monster-winner.png")
 }
 
 const _PLAYER_SETTINGS = {
   MAX_HEALTH: 100,
-  ATTACK_MIN: 2,
-  ATTACK_MAX: 6,
-  SPECIAL_ATTACK_MIN: 4,
-  SPECIAL_ATTACK_MAX: 9,
+  ATTACK_MIN: 3,
+  ATTACK_MAX: 10,
+  SPECIAL_ATTACK_MIN: 10,
+  SPECIAL_ATTACK_MAX: 20,
   HEAL_POWER: 4
 }
 
@@ -109,8 +152,9 @@ export default {
   data: () => ({
     // to access status constants in template, define them inside component
     gameStatuses: _GAME_STATUSES,
+    monsterSettings: _MONSTER_SETTINGS,
     playerHealth: 100,
-    monsterHealth: 50,
+    monsterHealth: 100,
     gameStatus: _GAME_STATUSES.NOT_STARTED,
     monsterSrc: _MONSTER_SETTINGS.IMG_DEFAULT
   }),
@@ -123,43 +167,61 @@ export default {
       this.monsterHealth = _MONSTER_SETTINGS.MAX_HEALTH
     },
 
-    /** @description attacks enemy and makess */
-    attack: function() {
-      this.monsterSrc = _MONSTER_SETTINGS.IMG_ATTACK
-      this.monsterHealth -= this.calculateDamage(
-        _PLAYER_SETTINGS.ATTACK_MAX,
-        _PLAYER_SETTINGS.ATTACK_MAX
-      )
+    setMonsterImage: function() {
+      if (this.gameStatus === _GAME_STATUSES.ATTACK) {
+        this.monsterSrc = _MONSTER_SETTINGS.IMG_ATTACK
+      } else {
+        this.monsterSrc = require(_MONSTER_SETTINGS.IMG_DEFAULT)
+      }
+    },
 
+    monsterAttack: function() {
+      this.gameStatus = _GAME_STATUSES.ATTACK
       this.playerHealth -= this.calculateDamage(
         _MONSTER_SETTINGS.ATTACK_MIN,
         _MONSTER_SETTINGS.ATTACK_MAX
       )
-      this.checkGameStatus()
-      // return player images to default after attack
-      setTimeout(function() {
-        console.log("setting image back to default")
-        this.monsterSrc = _MONSTER_SETTINGS.IMG_DEFAULT
-      }, 2000)
+      this.monsterSrc = _MONSTER_SETTINGS.IMG_ATTACK
+
+      if (this.monsterHealth > 0) {
+        // return player images to default after attack
+        const vm = this
+        setTimeout(function() {
+          vm.gameStatus = _GAME_STATUSES.ONGOING
+          vm.monsterSrc = _MONSTER_SETTINGS.IMG_DEFAULT
+        }, 500)
+      }
     },
 
-    /** @description more powerful attack but can fail also  */
-    specialAttack: function() {
-      this.monsterSrc = _MONSTER_SETTINGS.IMG_ATTACK
+    /** @description attacks enemy and makess */
+    attack: function() {
       this.monsterHealth -= this.calculateDamage(
-        _MONSTER_SETTINGS.SPECIAL_ATTACK_MIN,
-        _MONSTER_SETTINGS.SPECIAL_ATTACK_MAX
+        _PLAYER_SETTINGS.ATTACK_MAX,
+        _PLAYER_SETTINGS.ATTACK_MAX
       )
-      this.playerHealth -= this.calculateDamage(
+      this.monsterAttack()
+      this.checkGameStatus()
+    },
+
+    /** @description more powerful attack  */
+    specialAttack: function() {
+      this.monsterHealth -= this.calculateDamage(
         _PLAYER_SETTINGS.SPECIAL_ATTACK_MIN,
         _PLAYER_SETTINGS.SPECIAL_ATTACK_MAX
       )
+      this.monsterAttack()
       this.checkGameStatus()
     },
 
     /** @description increses player health */
     heal: function() {
       this.playerHealth += _PLAYER_SETTINGS.HEAL_POWER
+      this.gameStatus = _GAME_STATUSES.HEAL
+      // after half a second return back to normal
+      const vm = this
+      setTimeout(function() {
+        vm.gameStatus = _GAME_STATUSES.ONGOING
+      }, 1000)
     },
 
     /** @desctiption Cancel game and return to start screen */
@@ -194,5 +256,22 @@ export default {
 <style lang="scss" scoped>
 #battlefield {
   text-align: center;
+}
+
+#monster {
+  transition: 1s;
+  -webkit-animation: spin 1.8s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(-2deg);
+  }
+  33% {
+    -webkit-transform: rotate(2deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(-2deg);
+  }
 }
 </style>
