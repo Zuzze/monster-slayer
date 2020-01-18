@@ -44,6 +44,7 @@ export default {
   height: $BAR_HEIGHT;
   border-radius: 40px 0 0 40px;
   font-size: 0.8em;
+  padding-top: 5px;
   background-color: $HEALTH_BG_COLOR_1;
   background-image: linear-gradient(
     45deg,

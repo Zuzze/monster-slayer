@@ -3,29 +3,33 @@
     <v-app-bar app color="accent" dark>
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
+          alt="Monster slayer Logo"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          src="@/assets/img/eyes.png"
           transition="scale-transition"
-          width="40"
+          width="70"
         />
         <h1>Monster Slayer</h1>
       </div>
 
       <v-spacer></v-spacer>
 
-      <v-btn href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank" text></v-btn>
+      <v-btn
+        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        target="_blank"
+        text
+      ></v-btn>
     </v-app-bar>
 
-    <v-content>
+    <v-content class="theme-container">
       <Game />
     </v-content>
   </v-app>
 </template>
 
 <script>
-import Game from "./views/Game";
+import Game from "./views/Game"
 
 export default {
   name: "App",
@@ -35,12 +39,26 @@ export default {
   },
 
   data: () => ({})
-};
+}
 </script>
 
-<style scoped>
+<style lang="scss">
+@import "@/assets/style/theme.scss";
+
 body {
-  background-color: #08aeea;
-  background-image: linear-gradient(0deg, #08aeea 0%, #2af598 100%);
+  font-family: $FONT_FAMILY;
+  color: white;
+}
+
+.theme-container {
+  background-color: $PRIMARY;
+  background-image: linear-gradient(0deg, $SECONDARY 0%, $PRIMARY 100%);
+}
+
+h1,
+h2,
+h3 {
+  font-family: $FONT_FAMILY_TITLE;
+  color: white;
 }
 </style>

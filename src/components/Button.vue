@@ -47,7 +47,7 @@ button.btn {
   );
   &:hover:not(.disabled) {
     background-position: right center;
-    opacity: 0.7;
+    opacity: 0.9;
   }
 
   &.disabled {

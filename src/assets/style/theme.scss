@@ -1,21 +1,26 @@
+@import url("https://fonts.googleapis.com/css?family=Finger+Paint|Lato&display=swap");
+
+$FONT_FAMILY: "Lato", Helvetica, Arial, sans-serif;
+$FONT_FAMILY_TITLE: "Finger Paint", Helvetica, Arial, sans-serif;
+
 /* theme colors */
-$PRIMARY: #f1f1f1;
-$SECONDARY: lightgray;
-$ACCENT: #02aab0;
+$PRIMARY: #81b7c7ff;
+$SECONDARY: #1d324aff;
+$ACCENT: #1d324aff;
 $ERROR: rgb(227, 102, 102);
 $WARNING: #fffb7d;
 
 /* Health bar */
 $BAR_BORDER_RADIUS: 40px;
-$BAR_HEIGHT: 20px;
+$BAR_HEIGHT: 30px;
 $HEALTH_BG_COLOR_1: #85ffbd;
-$HEALTH_BG_COLOR_2: #fffb7d;
+$HEALTH_BG_COLOR_2: #c47d69;
 $EMPTY_BG_COLOR_1: #f1f1f1;
 $EMPTY_BG_COLOR_2: #e3e2e2;
 
 /* Button */
-$BUTTON_BG_COLOR_1: #02aab0;
-$BUTTON_BG_COLOR_2: #00cdac;
+$BUTTON_BG_COLOR_1: #c96b59;
+$BUTTON_BG_COLOR_2: #ffb4ad;
 $BUTTON_PADDING: 10px 15px;
 $BUTTON_COLOR: white;
 $BUTTON_TEXT_TRANSFORM: uppercase;

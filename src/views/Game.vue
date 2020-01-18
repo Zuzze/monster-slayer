@@ -1,84 +1,87 @@
 <template>
-  <v-container class="mb-6">
-    <p>{{ gameStatus }}</p>
-    <v-row align="center" no-gutters style="height: auto;">
-      <!--- Start screen -->
-      <v-col
-        v-if="gameStatus === gameStatuses.NOT_STARTED"
-        style="textAlign: center; margin: 3em;"
-      >
-        <Button @click="startGame">Start game</Button>
-      </v-col>
+  <div style="text-align: center;">
+    <!--- Start screen -->
+    <div
+      v-if="gameStatus === gameStatuses.NOT_STARTED"
+      style="margin-top: 20vh"
+    >
+      <h2>Slay the monster!</h2>
+      <img alt="Monster smiling" src="@/assets/img/monster.png" width="500" />
+      <br />
+      <Button @click="startGame">Start game</Button>
+    </div>
 
-      <!-- Game screen -->
-      <template
-        v-else-if="
-          [
-            gameStatuses.ONGOING,
-            gameStatuses.ATTACK,
-            gameStatuses.HEAL
-          ].includes(gameStatus)
-        "
-      >
-        <v-col id="player">
+    <!-- Game screen -->
+    <div
+      v-else-if="
+        [gameStatuses.ONGOING, gameStatuses.ATTACK, gameStatuses.HEAL].includes(
+          gameStatus
+        )
+      "
+      class="game-screen"
+    >
+      <div class="health-bar-container">
+        <HealthBar :value="monsterHealth"></HealthBar>
+      </div>
+      <div>
+        <img
+          id="monster"
+          :src="monsterSrc"
+          :class="gameStatus"
+          alt="cute red monster"
+        />
+      </div>
+
+      <div class="game-controls">
+        <Button :disabled="monsterHealth <= 0" @click="attack">Attack</Button>
+
+        <Button :disabled="monsterHealth <= 0" @click="specialAttack"
+          >Special Attack</Button
+        >
+
+        <Button
+          :disabled="playerHealth === 100 || monsterHealth <= 0"
+          @click="heal"
+          >Heal</Button
+        >
+
+        <Button :disabled="monsterHealth <= 0" @click="giveUp">Give up</Button>
+        <div class="health-bar-container">
+          <h3>Your Health</h3>
           <HealthBar
             :value="playerHealth"
             :healing="gameStatus === gameStatuses.HEAL"
           ></HealthBar>
-          <div>
-            <Button :disabled="monsterHealth <= 0" @click="attack"
-              >Attack</Button
-            >
-            <br />
-            <Button :disabled="monsterHealth <= 0" @click="specialAttack"
-              >Special Attack</Button
-            >
-            <br />
-            <Button
-              :disabled="playerHealth === 100 || monsterHealth <= 0"
-              @click="heal"
-              >Heal</Button
-            >
-            <br />
-            <Button :disabled="monsterHealth <= 0" @click="giveUp"
-              >Give up</Button
-            >
-          </div>
-        </v-col>
-        <v-col id="battlefield"></v-col>
-        <v-col>
-          <HealthBar :value="monsterHealth"></HealthBar>
-          <img
-            width="500px"
-            id="monster"
-            :src="monsterSrc"
-            :class="gameStatus"
-            alt="cute red monster"
-          />
-        </v-col>
-      </template>
-
-      <!-- Game ended screen -->
-      <v-col v-else>
-        Game ended
-        <div>
-          <img
-            v-if="gameStatus === gameStatuses.WIN"
-            :src="monsterSettings.IMG_DEFEATED"
-            width="50%"
-            alt="defeated monster with bandage"
-          />
-          <img
-            v-else
-            :src="monsterSettings.IMG_WIN"
-            width="50%"
-            alt="monster with sunglasses smiling"
-          />
         </div>
-        <Button @click="startGame">New game</Button>
-      </v-col>
-    </v-row>
-  </v-container>
+      </div>
+    </div>
+
+    <!-- Game ended screen -->
+    <div v-else class="game-end-screen">
+      <h2>
+        {{
+          gameStatus === gameStatuses.WIN
+            ? "You defeated the monster!"
+            : "Monster beat you!"
+        }}
+      </h2>
+      <div>
+        <img
+          v-if="gameStatus === gameStatuses.WIN"
+          :src="monsterSettings.IMG_DEFEATED"
+          width="80%"
+          alt="defeated monster with bandage"
+        />
+        <img
+          v-else
+          :src="monsterSettings.IMG_WIN"
+          width="80%"
+          alt="monster with sunglasses smiling"
+        />
+      </div>
+      <Button @click="startGame">New game</Button>
+    </div>
+  </div>
 </template>
 
 <!--<v-container>
@@ -131,10 +134,10 @@ const _MONSTER_SETTINGS = {
   MAX_HEALTH: 100,
   ATTACK_MIN: 5,
   ATTACK_MAX: 12,
-  IMG_DEFAULT: require("../assets/img/monster.png"),
-  IMG_ATTACK: require("../assets/img/monster-attack.png"),
-  IMG_DEFEATED: require("../assets/img/monster-defeated.png"),
-  IMG_WIN: require("../assets/img/monster-winner.png")
+  IMG_DEFAULT: require("../assets/img/monster.svg"),
+  IMG_ATTACK: require("../assets/img/monster-attack.svg"),
+  IMG_DEFEATED: require("../assets/img/monster-defeated.svg"),
+  IMG_WIN: require("../assets/img/monster-winner.svg")
 }
 
 const _PLAYER_SETTINGS = {
@@ -165,6 +168,7 @@ export default {
       this.gameStatus = _GAME_STATUSES.ONGOING
       this.playerHealth = _PLAYER_SETTINGS.MAX_HEALTH
       this.monsterHealth = _MONSTER_SETTINGS.MAX_HEALTH
+      this.monsterSrc = _MONSTER_SETTINGS.IMG_DEFAULT
     },
 
     setMonsterImage: function() {
@@ -254,11 +258,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#battlefield {
-  text-align: center;
+.health-bar-container {
+  padding: 1em 5em;
+  align-content: center;
+}
+
+.game-screen {
+  /*background-color: #abe9cd;
+  background-image: linear-gradient(315deg, $PRIMARY 0%, $SECONDARY 94%);*/
+  background-image: url("~@/assets/img/bg.svg");
+  background-size: 100vw auto;
+  background-position: 50% 0;
+}
+
+.game-controls {
+  margin-top: auto;
+}
+
+.game-end-screen {
+  margin: 5em auto;
 }
 
 #monster {
+  margin-top: 12vh;
+  width: 50%;
   transition: 1s;
   -webkit-animation: spin 1.8s linear infinite;
 }
@@ -272,6 +295,16 @@ export default {
 
   100% {
     -webkit-transform: rotate(-2deg);
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .game-screen {
+    background-size: cover;
+  }
+  #monster {
+    margin-top: 20vh;
+    width: 80%;
   }
 }
 </style>
