@@ -6,7 +6,7 @@
           alt="Monster slayer Logo"
           class="shrink mr-2"
           contain
-          src="@/assets/img/eyes.png"
+          src="@/assets/img/logo.png"
           transition="scale-transition"
           width="70"
         />
@@ -23,19 +23,19 @@
     </v-app-bar>
 
     <v-content class="theme-container">
-      <Game />
+      <MonsterSlayer></MonsterSlayer>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import Game from "./views/Game"
+import MonsterSlayer from "./views/MonsterSlayer"
 
 export default {
   name: "App",
 
   components: {
-    Game
+    MonsterSlayer
   },
 
   data: () => ({})
@@ -44,6 +44,7 @@ export default {
 
 <style lang="scss">
 @import "@/assets/style/theme.scss";
+@import "@/assets/style/animations.scss";
 
 body {
   font-family: $FONT_FAMILY;
@@ -60,5 +61,13 @@ h2,
 h3 {
   font-family: $FONT_FAMILY_TITLE;
   color: white;
+}
+
+.fade-in {
+  -webkit-animation: fade-in 2s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fade-in 2s; /* Firefox < 16 */
+  -ms-animation: fade-in 2s; /* Internet Explorer */
+  -o-animation: fade-in 2s; /* Opera < 12.1 */
+  animation: fade-in 2s;
 }
 </style>
