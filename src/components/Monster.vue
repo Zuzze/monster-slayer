@@ -57,39 +57,40 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/style/animations.scss";
 
+$MONSTER_WIDTH: 600;
+
 .monster-container {
   position: relative;
   top: 0;
-  left: 0;
-  width: 1000px;
+  text-align: center;
+  width: 70vw;
+  margin: auto;
 
-  .monster {
-    position: relative;
-    top: 0;
-    left: 10vw;
-    z-index: 2;
-    animation: walk 2s linear infinite;
-    -webkit-animation: walk 2s linear infinite;
-    width: 50%;
-    margin-top: 12vh;
-    transition: 1s;
-  }
+  .monster,
   .feet {
     position: absolute;
-    margin: auto;
-    left: 30vw;
-    top: 100px;
+    top: 10vh;
+    margin-left: -40%;
+  }
+
+  .monster {
+    animation: walk 2s linear infinite;
+    -webkit-animation: walk 2s linear infinite;
+    z-index: 3;
+  }
+  .feet {
+    z-index: 2;
     animation: walk 0.8s linear infinite;
     -webkit-animation: walk 0.8s linear infinite;
-    width: 50%;
   }
 }
 
 @media screen and (max-width: 1024px) {
   .monster,
   .feet {
-    margin-top: 20vh;
-    width: 80%;
+    top: 0;
+    /*margin-top: 20vh;
+    width: 80%;*/
   }
 }
 </style>

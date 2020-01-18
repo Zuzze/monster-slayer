@@ -10,7 +10,7 @@
           transition="scale-transition"
           width="70"
         />
-        <h1>Monster Slayer</h1>
+        <h1 class="app-bar-title">Monster Slayer</h1>
       </div>
 
       <v-spacer></v-spacer>
@@ -22,9 +22,7 @@
       ></v-btn>
     </v-app-bar>
 
-    <v-content class="theme-container">
-      <MonsterSlayer></MonsterSlayer>
-    </v-content>
+    <MonsterSlayer></MonsterSlayer>
   </v-app>
 </template>
 
@@ -48,12 +46,13 @@ export default {
 
 body {
   font-family: $FONT_FAMILY;
-  color: white;
-}
-
-.theme-container {
+  color: $PRIMARY;
   background-color: $PRIMARY;
   background-image: linear-gradient(0deg, $SECONDARY 0%, $PRIMARY 100%);
+}
+
+.app-bar-title {
+  width: 90vw;
 }
 
 h1,
@@ -64,10 +63,10 @@ h3 {
 }
 
 .fade-in {
-  -webkit-animation: fade-in 2s; /* Safari, Chrome and Opera > 12.1 */
-  -moz-animation: fade-in 2s; /* Firefox < 16 */
-  -ms-animation: fade-in 2s; /* Internet Explorer */
-  -o-animation: fade-in 2s; /* Opera < 12.1 */
-  animation: fade-in 2s;
+  -webkit-animation: fade-in 1s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fade-in 1s; /* Firefox < 16 */
+  -ms-animation: fade-in 1s; /* Internet Explorer */
+  -o-animation: fade-in 1s; /* Opera < 12.1 */
+  animation: fade-in 1s;
 }
 </style>

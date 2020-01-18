@@ -1,5 +1,5 @@
 <template>
-  <div style="text-align: center;">
+  <div class="theme-container" :class="gameStatus" style="text-align: center;">
     <!--- Start screen -->
     <StartScreen
       v-if="gameStatus === gameStatuses.NOT_STARTED"
@@ -15,7 +15,9 @@
       "
       class="game-screen fade-in"
     >
-      <Monster :status="gameStatus" :health="monsterHealth"></Monster>
+      <div class="monster-container">
+        <Monster :status="gameStatus" :health="monsterHealth"></Monster>
+      </div>
 
       <div class="game-controls">
         <div class="game-controls__buttons">
@@ -43,7 +45,12 @@
     </div>
 
     <!-- Game ended screen -->
-    <EndScreen class="fade-in" v-else :status="gameStatus" :onStartNewGame="startGame">
+    <EndScreen
+      class="fade-in"
+      v-else
+      :status="gameStatus"
+      :onStartNewGame="startGame"
+    >
     </EndScreen>
   </div>
 </template>
@@ -209,16 +216,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+@import "@/assets/style/theme.scss";
 .game-screen {
+}
+
+.theme-container {
   background-image: url("~@/assets/img/bg.svg");
-  background-size: 100vw auto;
-  background-position: 50% 0;
-  background-size: cover;
+  background-position: 0 50px;
+  min-height: 100vh;
+
+  &.not-started,
+  &.win,
+  &.lose {
+    background-image: none;
+    background-color: $PRIMARY;
+    background-image: linear-gradient(0deg, $SECONDARY 0%, $PRIMARY 100%);
+    min-height: 100vh;
+  }
 }
 
 .game-controls {
   margin-top: auto;
+  position: relative;
+  top: 55vw;
 }
 
 .game-end-screen {
@@ -227,5 +247,17 @@ export default {
 
 .player-health-bar-title {
   margin-top: 1em;
+}
+
+@media screen and (max-width: 1024px) {
+  .theme-container {
+    background-position: 0 50px;
+    background-size: 200%;
+    overflow-x: hidden;
+  }
+
+  .monster-container {
+    margin-top: 30vw;
+  }
 }
 </style>
