@@ -1,6 +1,8 @@
 <template>
   <div>
-    <HealthBar :value="health"></HealthBar>
+    <div class="monster-health-bar-container">
+      <HealthBar class="monster-health-bar" :value="health"></HealthBar>
+    </div>
 
     <div class="monster-container">
       <img
@@ -57,13 +59,16 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/style/animations.scss";
 
-$MONSTER_WIDTH: 600;
+.monster-health-bar-container {
+  padding-top: 70px;
+}
 
 .monster-container {
   position: relative;
   top: 0;
   text-align: center;
-  width: 70vw;
+  width: 50%;
+  max-width: 1000px;
   margin: auto;
 
   .monster,
@@ -89,8 +94,25 @@ $MONSTER_WIDTH: 600;
   .monster,
   .feet {
     top: 0;
-    /*margin-top: 20vh;
-    width: 80%;*/
+    width: 150%;
+    left: 20%;
+    margin-top: -120px;
+  }
+  .monster-health-bar-container {
+    padding-top: 0px;
+    padding-bottom: 90px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .monster,
+  .feet {
+    width: 200%;
+    left: 0%;
+    margin-top: -50px;
+  }
+  .monster-health-bar-container {
+    padding-top: 0px;
   }
 }
 </style>

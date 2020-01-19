@@ -191,10 +191,8 @@ export default {
     /** @description Check if player or monster won, otherwise continue game */
     checkGameStatus: function() {
       if (this.monsterHealth <= 0 || this.playerHealth <= 0) {
-        console.log("checking win", GAME_STATUSES.WIN, GAME_STATUSES.LOSE)
         this.gameStatus =
           this.monsterHealth <= 0 ? GAME_STATUSES.WIN : GAME_STATUSES.LOSE
-        console.log(this.gameStatus)
       }
     }
   },
@@ -217,12 +215,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/style/theme.scss";
-.game-screen {
-}
 
 .theme-container {
   background-image: url("~@/assets/img/bg.svg");
-  background-position: 0 50px;
+  background-size: cover;
+  background-position: 35% 50px;
   min-height: 100vh;
 
   &.not-started,
@@ -238,11 +235,7 @@ export default {
 .game-controls {
   margin-top: auto;
   position: relative;
-  top: 55vw;
-}
-
-.game-end-screen {
-  margin: 5em auto;
+  top: 60vh;
 }
 
 .player-health-bar-title {
@@ -251,13 +244,16 @@ export default {
 
 @media screen and (max-width: 1024px) {
   .theme-container {
-    background-position: 0 50px;
-    background-size: 200%;
+    background-position: 45% 50px;
     overflow-x: hidden;
   }
 
   .monster-container {
-    margin-top: 30vw;
+    margin-top: 10vh;
+  }
+
+  .game-controls {
+    top: 45vh;
   }
 }
 </style>

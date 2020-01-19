@@ -29,7 +29,7 @@ export default {
 @import "@/assets/style/theme.scss";
 
 .health-bar-container {
-  padding: 1em 5em;
+  padding: 0em 5em;
   align-content: center;
 
   .health-bar {

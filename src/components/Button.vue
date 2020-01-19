@@ -31,7 +31,6 @@ button.btn:focus {
 }
 
 button.btn {
-  min-width: 200px;
   padding: $BUTTON_PADDING;
   color: $BUTTON_COLOR;
   text-transform: $BUTTON_TEXT_TRANSFORM;

@@ -4,7 +4,7 @@
       {{
         status === gameStatuses.WIN
           ? "You defeated the monster!"
-          : "Monster beat you!"
+          : "The Monster beat you!"
       }}
     </h2>
     <div>
@@ -12,12 +12,14 @@
         v-if="status === gameStatuses.WIN"
         src="@/assets/img/monster-defeated.svg"
         width="80%"
+        class="game-end-screen__image"
         alt="defeated monster with bandage"
       />
       <img
         v-else
         src="@/assets/img/monster-winner.svg"
         width="80%"
+        class="game-end-screen__image"
         alt="monster with sunglasses smiling"
       />
     </div>
@@ -44,3 +46,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.game-end-screen {
+  margin-top: 15vh;
+}
+.game-end-screen__image {
+  max-width: 1000px;
+}
+</style>
