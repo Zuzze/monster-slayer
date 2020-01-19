@@ -37,7 +37,7 @@ button.btn {
   letter-spacing: $BUTTON_LETTER_SPACING;
   border-radius: $BUTTON_BORDER_RADIUS;
   background: $BUTTON_BG_COLOR_1;
-  margin: 1em 0.5em 0em 0.5em;
+  margin: 1em 0.5em 0em 0em;
   background-image: linear-gradient(
     to right,
     $BUTTON_BG_COLOR_1 0%,

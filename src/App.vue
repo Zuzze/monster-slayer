@@ -4,7 +4,7 @@
       <div class="d-flex align-center">
         <v-img
           alt="Monster slayer Logo"
-          class="shrink mr-2"
+          class="shrink"
           contain
           src="@/assets/img/logo.png"
           transition="scale-transition"
@@ -52,7 +52,8 @@ body {
 }
 
 .app-bar-title {
-  width: 90vw;
+  width: 80vw;
+  font-size: 1.5em;
 }
 
 h1,

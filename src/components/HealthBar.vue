@@ -50,7 +50,7 @@ export default {
     height: $BAR_HEIGHT;
     border-radius: 40px 0 0 40px;
     font-size: 0.8em;
-    padding-top: 5px;
+    padding-top: 0;
     background-color: $HEALTH_BG_COLOR_1;
     background-image: linear-gradient(
       45deg,
@@ -69,6 +69,12 @@ export default {
       -moz-box-shadow: 0px 0px 13px 2px rgba(156, 230, 87, 1);
       box-shadow: 0px 0px 13px 2px rgba(156, 230, 87, 1);
     }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .health-bar-container {
+    padding: 0em 1em;
   }
 }
 </style>

@@ -75,7 +75,7 @@ export default {
   .feet {
     position: absolute;
     top: 10vh;
-    margin-left: -40%;
+    margin-left: -45%;
   }
 
   .monster {
@@ -96,7 +96,7 @@ export default {
     top: 0;
     width: 150%;
     left: 20%;
-    margin-top: -120px;
+    margin-top: -80px;
   }
   .monster-health-bar-container {
     padding-top: 0px;
@@ -105,11 +105,16 @@ export default {
 }
 
 @media screen and (max-width: 600px) {
+  .monster-health-bar-container {
+    margin-top: 70px;
+    padding-bottom: 80px;
+  }
   .monster,
   .feet {
     width: 200%;
     left: 0%;
-    margin-top: -50px;
+    top: 15vh;
+    margin-top: -60px;
   }
   .monster-health-bar-container {
     padding-top: 0px;

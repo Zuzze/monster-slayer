@@ -84,19 +84,10 @@ export default {
       this.gameStatus = GAME_STATUSES.ONGOING
       this.playerHealth = PLAYER_SETTINGS.MAX_HEALTH
       this.monsterHealth = MONSTER_SETTINGS.MAX_HEALTH
-      this.monsterSrc = MONSTER_SETTINGS.IMG_DEFAULT
-    },
-
-    setMonsterImage: function() {
-      if (this.gameStatus === GAME_STATUSES.ATTACK) {
-        this.monsterSrc = MONSTER_SETTINGS.IMG_ATTACK
-      } else {
-        this.monsterSrc = require(MONSTER_SETTINGS.IMG_DEFAULT)
-      }
+      this.log = []
     },
 
     monsterAttack: function() {
-      this.monsterSrc = MONSTER_SETTINGS.IMG_ATTACK
       const playerDamage = this.calculateDamage(
         MONSTER_SETTINGS.ATTACK_MIN,
         MONSTER_SETTINGS.ATTACK_MAX
@@ -112,7 +103,6 @@ export default {
         const vm = this
         setTimeout(function() {
           vm.gameStatus = GAME_STATUSES.ONGOING
-          vm.monsterSrc = MONSTER_SETTINGS.IMG_DEFAULT
         }, MONSTER_SETTINGS.IMG_ATTACK_RECOVERY_MS)
       }
     },
@@ -121,7 +111,7 @@ export default {
     attack: function() {
       this.gameStatus = GAME_STATUSES.ATTACK
       const monsterDamage = this.calculateDamage(
-        PLAYER_SETTINGS.ATTACK_MAX,
+        PLAYER_SETTINGS.ATTACK_MIN,
         PLAYER_SETTINGS.ATTACK_MAX
       )
       this.monsterHealth -= monsterDamage
@@ -197,12 +187,6 @@ export default {
     }
   },
 
-  watch: {
-    log: function() {
-      console.log(this.log)
-    }
-  },
-
   components: {
     HealthBar,
     Button,
@@ -254,6 +238,12 @@ export default {
 
   .game-controls {
     top: 45vh;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .game-controls {
+    top: 35vh;
   }
 }
 </style>

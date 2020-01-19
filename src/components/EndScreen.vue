@@ -49,7 +49,7 @@ export default {
 
 <style lang="scss">
 .game-end-screen {
-  margin-top: 15vh;
+  margin-top: 20vh;
 }
 .game-end-screen__image {
   max-width: 1000px;
