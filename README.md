@@ -1,6 +1,8 @@
 # Monster-Slayer
 
-Browser game to slay a monster. SVG Graphics by me.
+Browser game to attack a monster. SVG Graphics by me. Game is responsive, currently optimized for Chrome.
+
+Demo [https://zuzze.tech/monster-slayer/](https://zuzze.tech/monster-slayer/)
 
 ## Project setup
 
